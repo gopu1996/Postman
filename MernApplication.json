@@ -1,0 +1,389 @@
+{
+	"info": {
+		"_postman_id": "98c935d6-79e4-4c32-bc25-bae7bdf72e8b",
+		"name": "MernApplication",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add_Users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "71e33384-8e95-4c0e-9a59-68986c12f0f9",
+						"exec": [
+							"pm.test('Creating a user Post Request successfully',()=>{\r",
+							"   pm.response.to.have.status(201)\r",
+							"})\r",
+							"\r",
+							"pm.test('Set id of player in enviroment',()=>{\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.environment.set(\"player_id\",jsonData._id);\r",
+							"    pm.environment.set('playername' , jsonData.playername)\r",
+							"    \r",
+							"})\r",
+							"\r",
+							"pm.test('Validating a name',()=>{\r",
+							"    var jsonData = pm.response.json();\r",
+							"   pm.expect(jsonData.playername).to.eql(pm.environment.get('playername'));\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "cdcef2f6-f544-43fe-a775-04aeefc5ede5",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"playername\": \"{{playername}}\",\r\n    \"email\": \"{{email}}\",\r\n    \"password\": \"{{password}}\",\r\n    \"gender\": \"{{gender}}\",\r\n    \"country\": \"{{country}}\",\r\n    \"club\": \"{{club}}\",\r\n    \"position\": \"{{position}}\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c4cc0397-d9f2-4ec6-9e79-a34d483aec5c",
+						"exec": [
+							"pm.test('Login successfully',()=>{\r",
+							"   pm.response.to.have.status(200)\r",
+							"})\r",
+							"\r",
+							"pm.test('Set token and email in enviroment',()=>{\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.environment.set(\"email\",jsonData.email);\r",
+							"    pm.environment.set(\"token\",jsonData.token);\r",
+							"})\r",
+							"\r",
+							"pm.test('Validating a name',()=>{\r",
+							"    var jsonData = pm.response.json();\r",
+							"   pm.expect(jsonData.email).to.eql(pm.environment.get('email'));\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"{{email}}\",\r\n    \"password\": \"{{password}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get_All_User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "412792ad-6e5f-4209-9a41-340445f5f89a",
+						"exec": [
+							"pm.test('Geting a Get Request successfully',()=>{\r",
+							"   pm.response.to.have.status(200)\r",
+							"})\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/getUser",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"getUser"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get_User_By_Id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8fc61b34-76fe-40ff-963e-4ddb6defeef2",
+						"exec": [
+							"pm.test('Geting a Get Request by user id successfully',()=>{\r",
+							"   pm.response.to.have.status(200)\r",
+							"})\r",
+							"\r",
+							"pm.test('Validating a name',()=>{\r",
+							"    var jsonData = pm.response.json();\r",
+							"   pm.expect(jsonData.user.playername).to.eql(pm.environment.get('playername'));\r",
+							"\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/users/{{player_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"users",
+						"{{player_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update_Users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "70e1e008-d4a9-4a4e-8ab4-a54a0d240dcc",
+						"exec": [
+							"pm.test('Updating a user Put Request successfully',()=>{\r",
+							"   var jsonData = pm.response.json();\r",
+							"   pm.environment.set('udclub',jsonData.club)\r",
+							"   pm.response.to.have.status(201)\r",
+							"  \r",
+							"})\r",
+							"\r",
+							"\r",
+							"pm.test('Validating a name',()=>{\r",
+							"   var jsonData = pm.response.json();\r",
+							"   pm.expect(jsonData.club).to.eql(pm.environment.get('udclub'));\r",
+							"\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "f4cc1ff3-f67e-4918-9c6d-e9424199e2ca",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"playername\": \"{{udplayername}}\",\r\n    \"email\": \"{{udemail}}\",\r\n    \"password\": \"{{udpassword}}\",\r\n    \"gender\": \"{{udgender}}\",\r\n    \"country\": \"{{udcountry}}\",\r\n    \"club\": \"{{udclub}}\",\r\n    \"position\": \"{{udposition}}\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/edit/{{player_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"edit",
+						"{{player_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get_User_By_Id _dpli",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "235d697f-54c8-47ed-ae4a-67e2ddbf6383",
+						"exec": [
+							"pm.test('Geting a Get Request by user id successfully',()=>{\r",
+							"   pm.response.to.have.status(200)\r",
+							"})\r",
+							"\r",
+							"\r",
+							"pm.test('Validating a club',()=>{\r",
+							"    var jsonData = pm.response.json();\r",
+							"   pm.expect(jsonData.user.club).to.eql(pm.environment.get('udclub'));\r",
+							"\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/users/{{player_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"users",
+						"{{player_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete_User_By_Id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "09b591bf-b210-4023-b54f-5e4a77ac597c",
+						"exec": [
+							"pm.test('Deleting a user successfully',()=>{\r",
+							"   pm.response.to.have.status(200)\r",
+							"})\r",
+							"\r",
+							"pm.test('Validating a Deleted user msg',()=>{\r",
+							"    var jsonData = pm.response.json();\r",
+							"   pm.expect(jsonData.msg).to.eql(\"User Deleted Successfully\");\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/delete/{{player_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"delete",
+						"{{player_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
